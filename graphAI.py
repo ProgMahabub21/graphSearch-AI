@@ -149,8 +149,91 @@ def breadthFirstSearch(gp):
                 frontier.append(child)
 
 
+def UniformCostSearch(gp):
+    
+    initialNode = Node(gp.initial)
+    frontier = []
+    frontier.append(initialNode)
 
-                
+    explored= set()
+
+    while frontier:
+        frontier.sort(key =lambda node:node.path_cost)                  #ucs sorted frontier based on path cost
+
+        print('Frontier: ')
+        print([node.state for node in frontier])
+        if len(frontier) == 0: return 'Failure'
+
+        node = frontier.pop(0)
+        print('Pop: ',node.state)
+
+        if gp.goalTest(node.state): return node
+
+        explored.add(node.state)
+
+        for child in node.expand(gp):
+            print('Child node : ',child.state)   
+            if child.state not in explored and child not in frontier:
+                frontier.append(child)
+    return None
+
+def GBFS(gp):
+    
+    initialNode = Node(gp.initial)
+    frontier = []
+    frontier.append(initialNode)
+
+    explored= set()
+
+    while frontier:
+        frontier.sort(key =lambda node:heuristicSLD[node.state])      #gbfs called heuristic func to sort no other change than ufs
+
+        print('Frontier: ')
+        print([node.state for node in frontier])
+        if len(frontier) == 0: return 'Failure'
+
+        node = frontier.pop(0)
+        print('Pop: ',node.state)
+
+        if gp.goalTest(node.state): return node
+
+        explored.add(node.state)
+
+        for child in node.expand(gp):
+            print('Child node : ',child.state)   
+            if child.state not in explored and child not in frontier:
+                frontier.append(child)
+    return None
+
+
+def aStar(gp):
+    
+    initialNode = Node(gp.initial)
+    frontier = []
+    frontier.append(initialNode)
+
+    explored= set()
+
+    while frontier:
+        frontier.sort(key =lambda node:node.path_cost + heuristicSLD[node.state])      #gbfs called heuristic func to sort no other change than ufs
+
+        print('Frontier: ')
+        print([node.state for node in frontier])
+        if len(frontier) == 0: return 'Failure'
+
+        node = frontier.pop(0)
+        print('Pop: ',node.state)
+
+        if gp.goalTest(node.state): return node
+
+        explored.add(node.state)
+
+        for child in node.expand(gp):
+            print('Child node : ',child.state)   
+            if child.state not in explored and child not in frontier:
+                frontier.append(child)
+    return None
+
 
 gp=graphProblem('Arad','Bucharest',graph)  #problem create
 
@@ -164,3 +247,18 @@ print ( " Result of DFS " )
 print('===================================')
 node=graphSearch(gp,-1)
 print('Path Cost to the Goal: ', node.path_cost)
+print('===================================')
+print ( " Result of UFS " )
+print('===================================')
+node=UniformCostSearch(gp)
+print("Path cost to goal : ",node.path_cost)
+print('===================================')
+print ( " Result of GBFS " )
+print('===================================')
+node=GBFS(gp)
+print("Path cost to goal : ",node.path_cost)
+print('===================================')
+print ( " Result of A star " )
+print('===================================')
+node=aStar(gp)
+print("Path cost to goal : ",node.path_cost)
